@@ -5,12 +5,12 @@
 # to run with Bash: "C:\Program Files\Git\bin\bash.exe" ./dev/build.sh
 ###
 
-export APP_NAME="VSCodium"
-export ASSETS_REPOSITORY="VSCodium/vscodium"
-export BINARY_NAME="codium"
+export APP_NAME="MimikkAI Editor"
+export ASSETS_REPOSITORY="mimikkai/mimikkai-editor"
+export BINARY_NAME="mimikkai-editor"
 export CI_BUILD="no"
-export GH_REPO_PATH="VSCodium/vscodium"
-export ORG_NAME="VSCodium"
+export GH_REPO_PATH="mimikkai/mimikkai-editor"
+export ORG_NAME="mimikkai"
 export SHOULD_BUILD="yes"
 export SKIP_ASSETS="yes"
 export SKIP_BUILD="no"
@@ -22,8 +22,8 @@ export VSCODE_SKIP_NODE_VERSION_CHECK="yes"
 while getopts ":ilops" opt; do
   case "$opt" in
     i)
-      export ASSETS_REPOSITORY="VSCodium/vscodium-insiders"
-      export BINARY_NAME="codium-insiders"
+      export ASSETS_REPOSITORY="mimikkai/mimikkai-editor-insiders"
+      export BINARY_NAME="mimikkai-editor-insiders"
       export VSCODE_QUALITY="insider"
       ;;
     l)

@@ -1,4 +1,58 @@
 {
+  "nameShort": "MimikkAI Editor - Insiders",
+  "nameLong": "MimikkAI Editor - Insiders",
+  "applicationName": "mimikkai-editor-insiders",
+  "dataFolderName": ".mimikkai-editor",
+  "win32MutexName": "mimikkai-editor",
+  "licenseName": "MIT",
+  "licenseUrl": "https://github.com/VSCodium/vscodium/blob/master/LICENSE",
+  "serverLicenseUrl": "https://github.com/microsoft/vscode/blob/main/LICENSE.txt",
+  "serverGreeting": [],
+  "serverLicense": [],
+  "serverLicensePrompt": "",
+  "serverApplicationName": "mimikkai-server",
+  "serverDataFolderName": ".mimikkai-server",
+  "tunnelApplicationName": "mimikkai-tunnel",
+  "win32DirName": "MimikkAI Editor",
+  "win32NameVersion": "MimikkAI Editor",
+  "win32RegValueName": "MimikkAI Editor",
+  "win32x64AppId": "{{88DA3577-054F-4CA1-8122-7D820494CFFB}",
+  "win32arm64AppId": "{{67DEE444-3D04-4258-B92A-BC1F0FF2CAE4}",
+  "win32x64UserAppId": "{{2E1F05D1-C245-4562-81EE-28188DB6FD17}",
+  "win32arm64UserAppId": "{{57FD70A5-1B8D-4875-9F40-C5553F094828}",
+  "win32AppUserModelId": "MimikkAI.MimikkAI Editor",
+  "win32ShellNameShort": "MimikkAI Editor",
+  "win32TunnelServiceMutex": "mimikkai-editor-tunnelservice",
+  "win32TunnelMutex": "mimikkai-editor-tunnel",
+  "darwinBundleIdentifier": "com.mimikkai",
+  "darwinProfileUUID": "47827DD9-4734-49A0-AF80-7E19B11495CC",
+  "darwinProfilePayloadUUID": "CF808BE7-53F3-46C6-A7E2-7EDB98A5E959",
+  "linuxIconName": "mimikkai-editor",
+  "licenseFileName": "LICENSE.txt",
+  "reportIssueUrl": "https://github.com/mimikkai/mimikkai-editor/issues/new",
+  "nodejsRepository": "https://nodejs.org",
+  "urlProtocol": "mimikkai-editor",
+  "webviewContentExternalBaseUrlTemplate": "https://{{uuid}}.vscode-cdn.net/insider/ef65ac1ba57f57f2a3961bfe94aa20481caca4c6/out/vs/workbench/contrib/webview/browser/pre/",
+  "checksumFailMoreInfoUrl": "https://go.microsoft.com/fwlink/?LinkId=828886",
+  "documentationUrl": "https://go.microsoft.com/fwlink/?LinkID=533484#vscode",
+  "introductoryVideosUrl": "https://go.microsoft.com/fwlink/?linkid=832146",
+  "keyboardShortcutsUrlLinux": "https://go.microsoft.com/fwlink/?linkid=832144",
+  "keyboardShortcutsUrlMac": "https://go.microsoft.com/fwlink/?linkid=832143",
+  "keyboardShortcutsUrlWin": "https://go.microsoft.com/fwlink/?linkid=832145",
+  "linkProtectionTrustedDomains": [
+    "https://open-vsx.org"
+  ],
+  "releaseNotesUrl": "https://go.microsoft.com/fwlink/?LinkID=533483#vscode",
+  "requestFeatureUrl": "https://go.microsoft.com/fwlink/?LinkID=533482",
+  "tipsAndTricksUrl": "https://go.microsoft.com/fwlink/?linkid=852118",
+  "twitterUrl": "https://go.microsoft.com/fwlink/?LinkID=533687",
+  "extensionsGallery": {
+    "serviceUrl": "https://open-vsx.org/vscode/gallery",
+    "itemUrl": "https://open-vsx.org/vscode/item",
+    "latestUrlTemplate": "https://open-vsx.org/vscode/gallery/{publisher}/{name}/latest",
+    "controlUrl": "https://raw.githubusercontent.com/EclipseFdn/publish-extensions/refs/heads/master/extension-control/extensions.json"
+  },
+  "tunnelApplicationConfig": {},
   "extensionAllowedBadgeProviders": [
     "api.bintray.com",
     "api.travis-ci.com",
@@ -648,5 +702,81 @@
     "gruntfuggly.todo-tree": {
       "default": false
     }
+  },
+  "win32AppId": "{{763CBF88-25C6-4B10-952F-326AE657F16B}",
+  "win32UserAppId": "{{0FD05EB4-651E-4E78-A062-515204B47A3A}",
+  "win32ContextMenu": {
+    "x64": {
+      "clsid": "D910D5E6-B277-4F4A-BDC5-759A34EEE25D"
+    },
+    "arm64": {
+      "clsid": "4852FC55-4A84-4EA1-9C86-D53BE3DF83C0"
+    }
+  },
+  "trustedExtensionAuthAccess": {
+    "github": [
+      "github.copilot",
+      "github.copilot-chat"
+    ]
+  },
+  "defaultChatAgent": {
+    "extensionId": "GitHub.copilot",
+    "chatExtensionId": "GitHub.copilot-chat",
+    "documentationUrl": "https://aka.ms/github-copilot-overview",
+    "termsStatementUrl": "https://aka.ms/github-copilot-terms-statement",
+    "privacyStatementUrl": "https://aka.ms/github-copilot-privacy-statement",
+    "skusDocumentationUrl": "https://aka.ms/github-copilot-plans",
+    "publicCodeMatchesUrl": "https://aka.ms/github-copilot-match-public-code",
+    "manageSettingsUrl": "https://aka.ms/github-copilot-settings",
+    "managePlanUrl": "https://aka.ms/github-copilot-manage-plan",
+    "manageOverageUrl": "https://aka.ms/github-copilot-manage-overage",
+    "upgradePlanUrl": "https://aka.ms/github-copilot-upgrade-plan",
+    "signUpUrl": "https://aka.ms/github-sign-up",
+    "provider": {
+      "default": {
+        "id": "github",
+        "name": "GitHub"
+      },
+      "enterprise": {
+        "id": "github-enterprise",
+        "name": "GHE.com"
+      },
+      "google": {
+        "id": "google",
+        "name": "Google"
+      },
+      "apple": {
+        "id": "apple",
+        "name": "Apple"
+      }
+    },
+    "providerUriSetting": "github-enterprise.uri",
+    "providerScopes": [
+      [
+        "user:email"
+      ],
+      [
+        "read:user"
+      ],
+      [
+        "read:user",
+        "user:email",
+        "repo",
+        "workflow"
+      ]
+    ],
+    "entitlementUrl": "https://api.github.com/copilot_internal/user",
+    "entitlementSignupLimitedUrl": "https://api.github.com/copilot_internal/subscribe_limited_user",
+    "chatQuotaExceededContext": "github.copilot.chat.quotaExceeded",
+    "completionsQuotaExceededContext": "github.copilot.completions.quotaExceeded",
+    "walkthroughCommand": "github.copilot.open.walkthrough",
+    "completionsMenuCommand": "github.copilot.toggleStatusMenu",
+    "completionsRefreshTokenCommand": "github.copilot.signIn",
+    "chatRefreshTokenCommand": "github.copilot.refreshToken",
+    "generateCommitMessageCommand": "github.copilot.git.generateCommitMessage",
+    "resolveMergeConflictsCommand": "github.copilot.git.resolveMergeConflicts",
+    "completionsAdvancedSetting": "github.copilot.advanced",
+    "completionsEnablementSetting": "github.copilot.enable",
+    "nextEditSuggestionsSetting": "github.copilot.nextEditSuggestions.enabled"
   }
 }
