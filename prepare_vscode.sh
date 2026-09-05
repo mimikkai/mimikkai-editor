@@ -64,6 +64,12 @@ if [[ "${DISABLE_UPDATE}" != "yes" ]]; then
   # fi
 fi
 
+
+setpath_json "product" "tunnelApplicationConfig" '{}'
+
+jsonTmp=$( jq -s '.[0] * .[1]' product.json ../product.json )
+echo "${jsonTmp}" > product.json && unset jsonTmp
+
 if [[ "${VSCODE_QUALITY}" == "insider" ]]; then
   setpath "product" "nameShort" "MimikkAI Editor - Insiders"
   setpath "product" "nameLong" "MimikkAI Editor - Insiders"
@@ -122,13 +128,9 @@ else
   setpath "product" "win32ContextMenu.arm64.clsid" "4852FC55-4A84-4EA1-9C86-D53BE3DF83C0"
 fi
 
-setpath_json "product" "tunnelApplicationConfig" '{}'
-
-jsonTmp=$( jq -s '.[0] * .[1]' product.json ../product.json )
-echo "${jsonTmp}" > product.json && unset jsonTmp
-
 cat product.json
 # }}}
+
 
 # include common functions
 . ../utils.sh
