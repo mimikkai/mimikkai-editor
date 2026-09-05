@@ -11,9 +11,15 @@ fi
 REPOSITORY_OWNER="${ASSETS_REPOSITORY/\/*/}"
 REPOSITORY_NAME="${ASSETS_REPOSITORY/*\//}"
 
+delete_asset() {
+  gh api "repos/${REPOSITORY_OWNER}/${REPOSITORY_NAME}/releases/tags/${RELEASE_VERSION}" --jq '.assets[] | select(.name == $F or .name == ($F + ".sha1") or .name == ($F + ".sha256")) | .id' --arg F "$1" 2>/dev/null | while read -r ASSET_ID; do
+    gh api -X DELETE "repos/${REPOSITORY_OWNER}/${REPOSITORY_NAME}/releases/assets/${ASSET_ID}" >/dev/null 2>&1 || true
+  done
+}
+
 npm install -g github-release-cli
 
-if [[ $( gh release view "${RELEASE_VERSION}" --repo "${ASSETS_REPOSITORY}" 2>&1 ) =~ "release not found" || $( gh release view "${RELEASE_VERSION}" --repo "${ASSETS_REPOSITORY}" --json "isPrerelease,tagName" 2>/dev/null ) == "" ]]; then
+if [[ $( gh release view "${RELEASE_VERSION}" --repo "${ASSETS_REPOSITORY}" 2>&1 ) =~ "release not found" ]]; then
   echo "Creating release '${RELEASE_VERSION}'"
 
   . ./utils.sh
@@ -62,8 +68,9 @@ set +e
 
 for FILE in *; do
   if [[ -f "${FILE}" ]] && [[ "${FILE}" != *.sha1 ]] && [[ "${FILE}" != *.sha256 ]]; then
+    delete_asset "${FILE}"
+
     echo "::group::Uploading '${FILE}' at $( date "+%T" )"
-    github-release delete --owner "${REPOSITORY_OWNER}" --repo "${REPOSITORY_NAME}" --tag "${RELEASE_VERSION}" "${FILE}" "${FILE}.sha1" "${FILE}.sha256"
     gh release upload --repo "${ASSETS_REPOSITORY}" "${RELEASE_VERSION}" "${FILE}" "${FILE}.sha1" "${FILE}.sha256"
 
     EXIT_STATUS=$?
@@ -71,9 +78,9 @@ for FILE in *; do
 
     if (( "${EXIT_STATUS}" )); then
       for (( i=0; i<10; i++ )); do
-        github-release delete --owner "${REPOSITORY_OWNER}" --repo "${REPOSITORY_NAME}" --tag "${RELEASE_VERSION}" "${FILE}" "${FILE}.sha1" "${FILE}.sha256"
-
         sleep $(( 15 * (i + 1)))
+
+        delete_asset "${FILE}"
 
         echo "RE-Uploading '${FILE}' at $( date "+%T" )"
         gh release upload --repo "${ASSETS_REPOSITORY}" "${RELEASE_VERSION}" "${FILE}" "${FILE}.sha1" "${FILE}.sha256"
@@ -85,13 +92,9 @@ for FILE in *; do
           break
         fi
       done
-      echo "exit: ${EXIT_STATUS}"
 
       if (( "${EXIT_STATUS}" )); then
         echo "'${FILE}' hasn't been uploaded!"
-
-        github-release delete --owner "${REPOSITORY_OWNER}" --repo "${REPOSITORY_NAME}" --tag "${RELEASE_VERSION}" "${FILE}" "${FILE}.sha1" "${FILE}.sha256"
-
         exit 1
       fi
     fi
