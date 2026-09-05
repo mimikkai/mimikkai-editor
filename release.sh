@@ -12,8 +12,14 @@ REPOSITORY_OWNER="${ASSETS_REPOSITORY/\/*/}"
 REPOSITORY_NAME="${ASSETS_REPOSITORY/*\//}"
 
 delete_asset() {
-  gh api "repos/${REPOSITORY_OWNER}/${REPOSITORY_NAME}/releases/tags/${RELEASE_VERSION}" --jq '.assets[] | select(.name == $F or .name == ($F + ".sha1") or .name == ($F + ".sha256")) | .id' --arg F "$1" 2>/dev/null | while read -r ASSET_ID; do
-    gh api -X DELETE "repos/${REPOSITORY_OWNER}/${REPOSITORY_NAME}/releases/assets/${ASSET_ID}" >/dev/null 2>&1 || true
+  # GitHub replaces spaces in asset names with dots on upload; match the dotted name.
+  ASSET_BASE="$( echo "$1" | sed 's/ /./g' )"
+
+  for SUFFIX in "" ".sha1" ".sha256"; do
+    ASSET_ID=$( gh api "repos/${REPOSITORY_OWNER}/${REPOSITORY_NAME}/releases/tags/${RELEASE_VERSION}" --jq ".assets[] | select(.name == \"${ASSET_BASE}${SUFFIX}\") | .id" 2>/dev/null )
+    if [[ -n "${ASSET_ID}" ]]; then
+      gh api -X DELETE "repos/${REPOSITORY_OWNER}/${REPOSITORY_NAME}/releases/assets/${ASSET_ID}" >/dev/null 2>&1 || true
+    fi
   done
 }
 
