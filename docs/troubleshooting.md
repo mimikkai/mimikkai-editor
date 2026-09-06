@@ -16,6 +16,9 @@
    - ["Open with VSCodium" missing from context menu](#windows-context-menu)
    - [Windows Defender flags the installer as malware](#windows-defender)
 
+- [macOS](#macos)
+   - [App is damaged or can't be opened](#macos-app-damaged)
+
 ## <a id="linux"></a>Linux
 
 ### <a id="linux-fonts-rectangle"></a>_Fonts showing up as rectangles_
@@ -152,3 +155,18 @@ Some users report Windows Defender detecting the VSCodium installer as `Cinjo` o
 - Verify the SHA256/SHA512 checksum of the downloaded file against the `.sha256` or `.sha512` file published alongside each release.
 - If Defender blocks the installer, add an exclusion for the downloaded file, run the install, then remove the exclusion.
 - You can also report the false positive directly to Microsoft via the [Windows Defender Security Intelligence submission portal](https://www.microsoft.com/en-us/wdsi/filesubmission).
+
+## <a id="macos"></a>macOS
+
+### <a id="macos-app-damaged"></a>_App is damaged or can't be opened_
+
+If macOS reports that the app is damaged and should be moved to the Trash, or shows an "unidentified developer" warning, first try right-clicking the app in Finder and choosing **Open**.
+
+If that still fails, remove the quarantine attribute that Gatekeeper attached to the downloaded app:
+
+```bash
+xattr -cr "/Applications/MimikkAI Editor.app"
+xattr -cr "/Applications/MimikkAI Editor - Insiders.app"
+```
+
+This happens because the builds are unsigned or ad-hoc signed, so Gatekeeper flags the app when it is downloaded instead of installed from a signed installer.

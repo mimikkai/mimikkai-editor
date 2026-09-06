@@ -54,6 +54,20 @@ if [[ -n "${CERTIFICATE_OSX_P12_DATA}" ]]; then
   rm "${ZIP_FILE}"
 
   cd ..
+else
+  # No certificate: ad-hoc sign the app so Gatekeeper treats it as signed
+  # (users get the normal "unidentified developer" prompt instead of
+  # "damaged"). Identity "-" performs an ad-hoc signature with no keychain
+  # and no certificate; --deep --force re-signs nested code (Electron
+  # framework, helper apps, ...) in correct order before sealing the outer
+  # bundle, replacing the invalid Electron prebuilt signatures. Notarization
+  # is skipped entirely (impossible without a cert).
+  echo "+ ad-hoc signing"
+  (
+    cd "VSCode-darwin-${VSCODE_ARCH}" || exit 1
+    codesign --force --deep --sign - ./*.app
+    codesign --verify --deep --strict ./*.app
+  )
 fi
 
 if [[ "${SHOULD_BUILD_ZIP}" != "no" ]]; then
