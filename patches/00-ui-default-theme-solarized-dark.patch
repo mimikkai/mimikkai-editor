@@ -1,0 +1,13 @@
+diff --git i/src/vs/workbench/services/themes/common/workbenchThemeService.ts w/src/vs/workbench/services/themes/common/workbenchThemeService.ts
+index 74edcdda..56455c9d 100644
+--- i/src/vs/workbench/services/themes/common/workbenchThemeService.ts
++++ w/src/vs/workbench/services/themes/common/workbenchThemeService.ts
+@@ -39,7 +39,7 @@ export enum ThemeSettings {
+ }
+ 
+ export namespace ThemeSettingDefaults {
+-	export const COLOR_THEME_DARK = 'Dark 2026';
++	export const COLOR_THEME_DARK = 'Solarized Dark';
+ 	export const COLOR_THEME_LIGHT = 'Light 2026';
+ 	export const COLOR_THEME_HC_DARK = 'Default High Contrast';
+ 	export const COLOR_THEME_HC_LIGHT = 'Default High Contrast Light';
