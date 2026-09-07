@@ -75,6 +75,14 @@ if [[ "${SHOULD_BUILD_ZIP}" != "no" ]]; then
   cd "VSCode-darwin-${VSCODE_ARCH}"
   zip -r -X -y "../assets/${APP_NAME}-darwin-${VSCODE_ARCH}-${RELEASE_VERSION}.zip" ./*.app
   cd ..
+  # Verify the signature of the packaged artifact itself (not just the build
+  # dir): unzip the release zip and re-check the bundle it contains, so a
+  # repack that broke the signature can never reach the release.
+  echo "+ verify packaged zip"
+  VERIFY_DIR="$( mktemp -d )"
+  unzip -q "assets/${APP_NAME}-darwin-${VSCODE_ARCH}-${RELEASE_VERSION}.zip" -d "${VERIFY_DIR}"
+  codesign --verify --deep --strict "${VERIFY_DIR}"/*.app
+  rm -rf "${VERIFY_DIR}"
 fi
 
 if [[ -n "${CERTIFICATE_OSX_P12_DATA}" && "${SHOULD_BUILD_DMG}" != "no" ]]; then
