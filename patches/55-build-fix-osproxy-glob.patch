@@ -1,12 +1,14 @@
---- a/build/gulpfile.vscode.ts
-+++ b/build/gulpfile.vscode.ts
-@@ -382,7 +382,8 @@
- 			.pipe(util.cleanNodeModules(path.join(import.meta.dirname, '.moduleignore')))
- 			.pipe(util.cleanNodeModules(path.join(import.meta.dirname, `.moduleignore.${process.platform}`)));
+diff --git i/build/gulpfile.vscode.ts w/build/gulpfile.vscode.ts
+index 7eb0a8288af..5cb6ef367d1 100644
+--- i/build/gulpfile.vscode.ts
++++ w/build/gulpfile.vscode.ts
+@@ -388,7 +388,8 @@ function packageTask(platform: string, arch: string, sourceFolderName: string, d
+ 		ensureCopilotPlatformPackage(platform, arch);
+ 		const copilotRuntimePrebuilds = gulp.src(getCopilotRuntimePrebuildFiles(platform, arch), { base: '.', dot: true, allowEmpty: true });
  		ensureOSProxyResolverPlatformPackage(platform, arch);
 -		const osProxyResolverPlatformPackage = gulp.src(getOSProxyResolverPlatformFiles(platform, arch), { base: '.', dot: true, allowEmpty: true });
 +		const osProxyResolverPlatformFiles = getOSProxyResolverPlatformFiles(platform, arch);
 +		const osProxyResolverPlatformPackage = osProxyResolverPlatformFiles.length ? gulp.src(osProxyResolverPlatformFiles, { base: '.', dot: true, allowEmpty: true }) : es.readArray<string>([]);
- 		const deps = es.merge(cleanedDeps, osProxyResolverPlatformPackage)
- 			.pipe(filter(getFoundryLocalExcludeFilter()))
- 			.pipe(filter(getOSProxyResolverExcludeFilter(platform, arch)))
+ 		const deps = es.merge(cleanedDeps, copilotRuntimePrebuilds, osProxyResolverPlatformPackage)
+ 			.pipe(filter(getCopilotExcludeFilter(platform, arch)))
+ 			.pipe(filter(getCopilotTgrepExcludeFilter(platform, arch)))
