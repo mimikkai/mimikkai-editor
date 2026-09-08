@@ -1,5 +1,5 @@
 diff --git i/build/lib/copilot.ts w/build/lib/copilot.ts
-index 3d9cfbe2adf..ec60f9eea60 100644
+index 3d9cfbe2adf..3f34e15d0bd 100644
 --- i/build/lib/copilot.ts
 +++ w/build/lib/copilot.ts
 @@ -3,11 +3,14 @@
@@ -17,7 +17,7 @@ index 3d9cfbe2adf..ec60f9eea60 100644
  /**
   * Options for {@link prepareBuiltInCopilotRipgrepShim}. Extends the npm packing
   * options with an override for the extension lockfile used to verify natives
-@@ -256,7 +259,23 @@ export function prepareBuiltInCopilotRipgrepShim(platform: string, arch: string,
+@@ -256,7 +259,27 @@ export function prepareBuiltInCopilotRipgrepShim(platform: string, arch: string,
  	const copilotBase = path.join(extensionNodeModules, '@github', 'copilot');
  	const copilotSdkBase = path.join(copilotBase, 'sdk');
  	if (!fs.existsSync(copilotSdkBase)) {
@@ -39,6 +39,10 @@ index 3d9cfbe2adf..ec60f9eea60 100644
 +		}
 +		console.log('[prepareBuiltInCopilotRipgrepShim] Copying missing Copilot SDK from source tree...');
 +		fs.cpSync(sourceSdk, copilotSdkBase, { recursive: true, force: true });
++		const sourcePackageJson = path.join(path.dirname(sourceSdk), 'package.json');
++		if (!fs.existsSync(path.join(copilotBase, 'package.json')) && fs.existsSync(sourcePackageJson)) {
++			fs.copyFileSync(sourcePackageJson, path.join(copilotBase, 'package.json'));
++		}
  	}
  	materializeBuiltInCopilotSdkPlatformFiles(copilotPackagePlatformArch, tgrepPlatformArch, copilotBase, appNodeModulesDir, options);
  	pruneNonTargetCopilotSdkPrebuilds(copilotPackagePlatformArch, path.join(copilotSdkBase, 'prebuilds'), copilotPlatforms);
