@@ -1,0 +1,42 @@
+diff --git i/build/lib/copilot.ts w/build/lib/copilot.ts
+index 3d9cfbe2adf..3e878a13a30 100644
+--- i/build/lib/copilot.ts
++++ w/build/lib/copilot.ts
+@@ -3,11 +3,14 @@
+  *  Licensed under the MIT License. See License.txt in the project root for license information.
+  *--------------------------------------------------------------------------------------------*/
+ 
++import * as cp from 'child_process';
+ import * as fs from 'fs';
+ import * as os from 'os';
+ import * as path from 'path';
+ import { ensureNpmPackage, materializeNpmPackageVersion, type EnsureNpmPackageOptions } from './npmPackage.ts';
+ 
++const root = path.dirname(path.dirname(import.meta.dirname));
++
+ /**
+  * Options for {@link prepareBuiltInCopilotRipgrepShim}. Extends the npm packing
+  * options with an override for the extension lockfile used to verify natives
+@@ -256,7 +259,21 @@ export function prepareBuiltInCopilotRipgrepShim(platform: string, arch: string,
+ 	const copilotBase = path.join(extensionNodeModules, '@github', 'copilot');
+ 	const copilotSdkBase = path.join(copilotBase, 'sdk');
+ 	if (!fs.existsSync(copilotSdkBase)) {
+-		throw new Error(`[prepareBuiltInCopilotRipgrepShim] Copilot SDK directory not found at ${copilotSdkBase}`);
++		// The extension's postinstall materializes `sdk/` from the platform
++		// package; when it didn't run (or ran before the platform package was
++		// installed) the packaged app is missing the whole directory. Copy it
++		// from the source tree's extensions/copilot/node_modules, falling back
++		// to running the extension's postinstall there first.
++		const sourceSdk = path.join(root, 'extensions', 'copilot', 'node_modules', '@github', 'copilot', 'sdk');
++		if (!fs.existsSync(sourceSdk)) {
++			console.log('[prepareBuiltInCopilotRipgrepShim] Materializing Copilot SDK via extensions/copilot postinstall...');
++			cp.execSync('npm run postinstall --if-present', { cwd: path.join(root, 'extensions', 'copilot'), stdio: 'inherit' });
++		}
++		if (!fs.existsSync(sourceSdk)) {
++			throw new Error(`[prepareBuiltInCopilotRipgrepShim] Copilot SDK directory not found at ${copilotSdkBase} nor ${sourceSdk}`);
++		}
++		console.log('[prepareBuiltInCopilotRipgrepShim] Copying missing Copilot SDK from source tree...');
++		fs.cpSync(path.dirname(sourceSdk), copilotBase, { recursive: true, force: true });
+ 	}
+ 	materializeBuiltInCopilotSdkPlatformFiles(copilotPackagePlatformArch, tgrepPlatformArch, copilotBase, appNodeModulesDir, options);
+ 	pruneNonTargetCopilotSdkPrebuilds(copilotPackagePlatformArch, path.join(copilotSdkBase, 'prebuilds'), copilotPlatforms);
