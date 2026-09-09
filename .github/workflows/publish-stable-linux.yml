@@ -253,6 +253,7 @@ jobs:
     needs:
       - check
       - build
+    if: always() && needs.check.outputs.SHOULD_BUILD_APPIMAGE != 'no' && needs.check.outputs.SHOULD_BUILD == 'yes' && needs.build.result != 'cancelled'
     environment: publish
     permissions:
       contents: write
@@ -271,7 +272,6 @@ jobs:
     env:
       DISABLED: ${{ vars[format('DISABLE_STABLE_LINUX_APPIMAGE_{0}', matrix.slug)] }}
       RELEASE_VERSION: ${{ needs.build.outputs.RELEASE_VERSION }}
-    if: needs.check.outputs.SHOULD_BUILD_APPIMAGE != 'no' && needs.build.outputs.SHOULD_BUILD == 'yes'
 
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
