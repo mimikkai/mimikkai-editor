@@ -12,13 +12,13 @@ WIN_SDK_FULL_VERSION="10.0.17763.0"
 if [[ "${VSCODE_QUALITY}" == "insider" ]]; then
   PRODUCT_NAME="MimikkAI Editor - Insiders"
   PRODUCT_CODE="MimikkAIEditorInsiders"
-  PRODUCT_UPGRADE_CODE="1C9B7195-5A9A-43B3-B4BD-583E20498467"
+  PRODUCT_UPGRADE_CODE="BB9D18BF-2790-41B3-84AE-E0BD6B2C6E76"
   ICON_DIR="..\\..\\..\\src\\insider\\resources\\win32"
   SETUP_RESOURCES_DIR=".\\resources\\insider"
 else
   PRODUCT_NAME="MimikkAI Editor"
   PRODUCT_CODE="MimikkAIEditor"
-  PRODUCT_UPGRADE_CODE="965370CD-253C-4720-82FC-2E6B02A53808"
+  PRODUCT_UPGRADE_CODE="21542372-B23F-4529-A4FC-5155E4646A85"
   ICON_DIR="..\\..\\..\\src\\stable\\resources\\win32"
   SETUP_RESOURCES_DIR=".\\resources\\stable"
 fi
