@@ -176,6 +176,8 @@ jobs:
         if: env.DISABLED != 'yes' && env.SHOULD_BUILD == 'yes'
 
       - name: Install GH
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: ./build/linux/install_gh.sh
         if: env.DISABLED != 'yes' && env.SHOULD_BUILD == 'yes'
 
@@ -274,6 +276,22 @@ jobs:
           persist-credentials: false
         if: env.DISABLED != 'yes'
 
+      - name: Setup Node.js environment
+        uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version-file: .nvmrc
+        if: env.DISABLED != 'yes'
+
+      - name: Setup jq
+        uses: vegardit/gha-setup-jq@fae9c6aa0b21dbe5bd3b77d280cf142e0a0a65b4 # 1.1.0
+        if: env.DISABLED != 'yes'
+
+      - name: Install GH
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: ./build/linux/install_gh.sh
+        if: env.DISABLED != 'yes'
+
       - name: Preparing Container
         uses: pkgforge-dev/anylinux-setup-action@0964f2258d6c93d1391359978dde081fd8b3c6af # v2
         if: env.DISABLED != 'yes'
@@ -285,13 +303,11 @@ jobs:
         if: env.DISABLED != 'yes'
 
       - name: Make AppImage
-        run: ./build/linux/anylinux-appimage/make-appimage.sh
+        run: ./build/linux/anylinux-appimage/build.sh
         if: env.DISABLED != 'yes'
 
-      - name: Move AppImage to assets
-        run: |
-          mkdir -p assets
-          mv dist/*.AppImage* assets/
+      - name: Prepare assets
+        run: ./build/linux/anylinux-appimage/prepare_assets.sh
         if: env.DISABLED != 'yes'
 
       - name: Release
@@ -375,6 +391,8 @@ jobs:
         if: env.DISABLED != 'yes'
 
       - name: Install GH
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: ./build/linux/install_gh.sh
         if: env.DISABLED != 'yes'
 
@@ -452,6 +470,8 @@ jobs:
           node-version-file: '.nvmrc'
 
       - name: Install GH
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: ./build/linux/install_gh.sh
 
       - name: Check existing tags/releases
@@ -490,6 +510,7 @@ jobs:
       - build
     runs-on: ubuntu-latest
     environment: publish-linux-aur
+    if: github.repository_owner == 'mimikkai'
     permissions: {}
     strategy:
       fail-fast: false
@@ -569,34 +590,4 @@ jobs:
         with:
           snap: ${{ steps.build.outputs.snap }}
           release: ${{ vars.SNAP_STORE_CHANNEL }}
-        if: env.SHOULD_DEPLOY_TO_STORE == 'yes'
-
-  deploy-repo-rudy:
-    needs:
-      - check
-      - build
-    runs-on: ubuntu-latest
-    environment: publish-linux-rudy
-    permissions: {}
-
-    steps:
-      - name: Trigger repository rebuild
-        env:
-          GL_PAGES_TOKEN: ${{ secrets.GL_PAGES_TOKEN }}
-        run: curl -X POST --fail -F token="${GL_PAGES_TOKEN}" -F ref=master https://gitlab.com/api/v4/projects/8762263/trigger/pipeline
-
-  deploy-repo-dev:
-    needs:
-      - check
-      - build
-    runs-on: ubuntu-latest
-    environment: publish
-    permissions: {}
-
-    steps:
-      - name: Trigger repository rebuild
-        uses: peter-evans/repository-dispatch@28959ce8df70de7be546dd1250a005dd32156697 # v4.0.1
-        with:
-          token: ${{ secrets.STRONGER_GITHUB_TOKEN }}
-          repository: mimikkai/repositories-linux
-          event-type: deploy
+        if: env.SHOULD_DEPLOY_TO_STORE == 'yes' && vars.SNAP_STORE_CHANNEL != ''
