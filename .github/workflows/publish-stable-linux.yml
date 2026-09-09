@@ -362,7 +362,7 @@ jobs:
       RELEASE_VERSION: ${{ needs.check.outputs.RELEASE_VERSION }}
       SHOULD_BUILD: ${{ needs.check.outputs.SHOULD_BUILD }}
       VSCODE_ARCH: ${{ matrix.vscode_arch }}
-    if: needs.check.outputs.SHOULD_BUILD == 'yes'
+    if: always() && needs.check.outputs.SHOULD_BUILD == 'yes' && needs.compile.result != 'cancelled'
 
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
@@ -459,7 +459,6 @@ jobs:
       RELEASE_VERSION: ${{ needs.check.outputs.RELEASE_VERSION }}
       SHOULD_BUILD: ${{ needs.check.outputs.SHOULD_BUILD }}
       VSCODE_ARCH: ${{ matrix.vscode_arch }}
-    if: needs.check.outputs.SHOULD_BUILD == 'yes'
 
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
