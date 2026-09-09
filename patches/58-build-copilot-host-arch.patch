@@ -1,0 +1,18 @@
+diff --git i/build/npm/postinstall.ts w/build/npm/postinstall.ts
+index 0dd0b514ecf..1e9c3fabd3a 100644
+--- i/build/npm/postinstall.ts
++++ w/build/npm/postinstall.ts
+@@ -138,6 +138,13 @@ function setNpmrcConfig(dir: string, env: NodeJS.ProcessEnv) {
+ 		// env['npm_config_target'] = process.versions.node;
+ 		env['npm_config_arch'] = process.arch;
+ 	}
++
++	// The built-in copilot extension's dependency install scripts (e.g.
++	// @vscode/vsce-sign) validate the requested architecture and throw on
++	// cross-build targets; pin the host architecture for that directory.
++	if (dir === 'extensions/copilot') {
++		delete env['npm_config_arch'];
++	}
+ }
+ 
+ function removeParcelWatcherPrebuild(dir: string) {
