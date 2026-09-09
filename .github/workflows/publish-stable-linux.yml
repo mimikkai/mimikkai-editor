@@ -522,7 +522,7 @@ jobs:
       - build
     runs-on: ubuntu-latest
     environment: publish-linux-aur
-    if: always() && github.repository_owner == 'mimikkai' && needs.build.result != 'cancelled'
+    if: always() && vars.DISABLE_AUR_PUBLISH != 'yes' && github.repository_owner == 'mimikkai' && needs.build.result != 'cancelled'
     permissions: {}
     strategy:
       fail-fast: false
@@ -558,7 +558,7 @@ jobs:
         platform:
         - amd64
         - arm64
-    if: always() && needs.check.outputs.SHOULD_BUILD_SNAP != 'no' && vars.DISABLE_STABLE_SNAP != 'yes' && needs.build.result != 'cancelled'
+    if: always() && needs.check.outputs.SHOULD_BUILD_SNAP != 'no' && vars.DISABLE_STABLE_SNAP != 'yes' && vars.SNAP_STORE_CHANNEL != '' && needs.build.result != 'cancelled'
 
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
