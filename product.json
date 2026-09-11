@@ -5,7 +5,7 @@
   "dataFolderName": ".mimikkai-editor",
   "win32MutexName": "mimikkai-editor",
   "licenseName": "MIT",
-  "licenseUrl": "https://github.com/VSCodium/vscodium/blob/master/LICENSE",
+  "licenseUrl": "https://raw.githubusercontent.com/mimikkai/mimikkai-editor/refs/heads/main/LICENSE",
   "serverLicenseUrl": "https://github.com/microsoft/vscode/blob/main/LICENSE.txt",
   "serverGreeting": [],
   "serverLicense": [],
