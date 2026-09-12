@@ -1,0 +1,31 @@
+{
+  "name": "mimikkai-ru-language",
+  "displayName": "Russian Language Pack (auto)",
+  "description": "Installs the Russian language pack for MimikkAI Editor on startup.",
+  "version": "1.0.0",
+  "publisher": "MimikkAi",
+  "license": "MIT",
+  "engines": {
+    "vscode": "^1.135.0"
+  },
+  "categories": [
+    "Language Packs"
+  ],
+  "activationEvents": [
+    "onStartupFinished"
+  ],
+  "main": "./extension.js",
+  "capabilities": {
+    "untrustedWorkspaces": {
+      "supported": true
+    }
+  },
+  "contributes": {
+    "commands": [
+      {
+        "command": "mimikkai.lang.installRu",
+        "title": "MimikkAI: Install Russian Language Pack"
+      }
+    ]
+  }
+}
