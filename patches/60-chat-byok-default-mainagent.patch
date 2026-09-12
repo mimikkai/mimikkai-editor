@@ -1,0 +1,13 @@
+diff --git i/src/vs/workbench/contrib/chat/browser/chat.shared.contribution.ts w/src/vs/workbench/contrib/chat/browser/chat.shared.contribution.ts
+index 14210b54..c50fe43c 100644
+--- i/src/vs/workbench/contrib/chat/browser/chat.shared.contribution.ts
++++ w/src/vs/workbench/contrib/chat/browser/chat.shared.contribution.ts
+@@ -1755,7 +1755,7 @@ configurationRegistry.registerConfiguration({
+ 				nls.localize('chat.byokUtilityModelDefault.mainAgent.description', "Use the selected BYOK main agent model."),
+ 				nls.localize('chat.byokUtilityModelDefault.copilot.description', "Use the default GitHub Copilot utility models."),
+ 			],
+-			default: BYOKUtilityModelDefault.Copilot,
++			default: BYOKUtilityModelDefault.MainAgent,
+ 		},
+ 		[ChatConfiguration.UtilityModel]: {
+ 			type: 'string',
