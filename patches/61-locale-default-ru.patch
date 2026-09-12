@@ -1,0 +1,19 @@
+diff --git i/src/main.ts w/src/main.ts
+index 085290ba..54150fa6 100644
+--- i/src/main.ts
++++ w/src/main.ts
+@@ -732,7 +732,13 @@ function getUserDefinedLocale(argvConfig: IArgvConfig): string | undefined {
+ 		return locale.toLowerCase(); // a directly provided --locale always wins
+ 	}
+ 
+-	return typeof argvConfig?.locale === 'string' ? argvConfig.locale.toLowerCase() : undefined;
++	// MimikkAI: default the display language to Russian unless the user
++	// configured a different locale in argv.json.
++	if (typeof argvConfig?.locale !== 'string') {
++		return 'ru';
++	}
++
++	return argvConfig.locale.toLowerCase();
+ }
+ 
+ //#endregion
