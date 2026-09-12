@@ -1,12 +1,11 @@
 MimikkAI Editor Extension Pack
 ==============================
 
-Bundled extension pack for MimikkAI Editor.
+Builtin extension for MimikkAI Editor.
 
-This pack declares a dependency on the marketplace extension
-`MimikkAi.mimikkai-editor-extension-pack`. MimikkAI Editor prompts the
-user to install the pack's contents from the configured extension
-gallery on first run.
+On startup it installs the marketplace extension pack
+`MimikkAi.mimikkai-editor-extension-pack` if it is not present
+(configured gallery). The install can be re-run manually with the
+command `MimikkAI: Install Extension Pack`.
 
-This extension contains no executable code; it only carries the
-manifest that points to the marketplace pack.
+This extension is UI-kind and carries no other executable logic.

@@ -1,8 +1,8 @@
 {
   "name": "mimikkai-editor-pack",
   "displayName": "MimikkAI Editor Extension Pack",
-  "description": "Recommended extensions for MimikkAI Editor. Installing this pack pulls the MimikkAI extension set from the marketplace.",
-  "version": "1.0.0",
+  "description": "Installs the MimikkAI extension set from the marketplace on startup.",
+  "version": "1.1.0",
   "publisher": "MimikkAi",
   "license": "MIT",
   "engines": {
@@ -11,9 +11,10 @@
   "categories": [
     "Extension Packs"
   ],
-  "extensionPack": [
-    "MimikkAi.mimikkai-editor-extension-pack"
+  "activationEvents": [
+    "onStartupFinished"
   ],
+  "main": "./extension.js",
   "capabilities": {
     "virtualWorkspaces": {
       "supported": true
@@ -21,5 +22,13 @@
     "untrustedWorkspaces": {
       "supported": true
     }
+  },
+  "contributes": {
+    "commands": [
+      {
+        "command": "mimikkai.pack.install",
+        "title": "MimikkAI: Install Extension Pack"
+      }
+    ]
   }
 }
