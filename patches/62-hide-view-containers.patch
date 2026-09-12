@@ -1,0 +1,33 @@
+diff --git i/src/vs/workbench/browser/parts/paneCompositeBar.ts w/src/vs/workbench/browser/parts/paneCompositeBar.ts
+index 048de8a0..345a8d1c 100644
+--- i/src/vs/workbench/browser/parts/paneCompositeBar.ts
++++ w/src/vs/workbench/browser/parts/paneCompositeBar.ts
+@@ -19,6 +19,7 @@ import { IExtensionService } from '../../services/extensions/common/extensions.j
+ import { URI, UriComponents } from '../../../base/common/uri.js';
+ import { ToggleCompositePinnedAction, ICompositeBarColors, IActivityHoverOptions, ToggleCompositeBadgeAction, CompositeBarAction, ICompositeBar, ICompositeBarActionItem } from './compositeBarActions.js';
+ import { IViewDescriptorService, ViewContainer, IViewContainerModel, ViewContainerLocation } from '../../common/views.js';
++import { IProductService } from '../../product/common/productService.js';
+ import { IContextKeyService, ContextKeyExpr } from '../../../platform/contextkey/common/contextkey.js';
+ import { isString } from '../../../base/common/types.js';
+ import { IWorkbenchEnvironmentService } from '../../services/environment/common/environmentService.js';
+@@ -108,6 +109,7 @@ export class PaneCompositeBar extends Disposable {
+ 		@IContextKeyService protected readonly contextKeyService: IContextKeyService,
+ 		@IWorkbenchEnvironmentService private readonly environmentService: IWorkbenchEnvironmentService,
+ 		@IWorkbenchLayoutService protected readonly layoutService: IWorkbenchLayoutService,
++		@IProductService private readonly productService: IProductService,
+ 	) {
+ 		super();
+ 
+@@ -434,6 +436,12 @@ export class PaneCompositeBar extends Disposable {
+ 		const viewContainer = isString(viewContainerOrId) ? this.getViewContainer(viewContainerOrId) : viewContainerOrId;
+ 		const viewContainerId = isString(viewContainerOrId) ? viewContainerOrId : viewContainerOrId.id;
+ 
++		// MimikkAI: containers listed in product.json 'hiddenViewContainers' are
++		// hidden from the activity bar by default (still reachable via commands).
++		if (this.productService.hiddenViewContainers?.includes(viewContainerId)) {
++			return true;
++		}
++
+ 		if (viewContainer) {
+ 			if (viewContainer.hideIfEmpty) {
+ 				if (this.viewService.isViewContainerActive(viewContainerId)) {

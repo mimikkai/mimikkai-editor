@@ -55,6 +55,10 @@
     "resourceUrlTemplate": "https://{publisher}.vscode-unpkg.net/{publisher}/{name}/{version}/{path}",
     "controlUrl": "https://update.code.visualstudio.com/api/gallery/extension-control/extensions.json"
   },
+  "hiddenViewContainers": [
+    "workbench.view.scm",
+    "workbench.view.debug"
+  ],
   "tunnelApplicationConfig": {},
   "extensionAllowedBadgeProviders": [
     "api.bintray.com",
