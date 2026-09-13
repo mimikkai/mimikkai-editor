@@ -6,7 +6,7 @@ if [[ -n "${CERTIFICATE_OSX_P12_DATA}" ]]; then
   fi
 
   CERTIFICATE_P12="${APP_NAME}.p12"
-  KEYCHAIN="${RUNNER_TEMP}/buildagent.keychain"
+  KEYCHAIN="${RUNNER_TEMP}/build.keychain"
   AGENT_TEMPDIRECTORY="${RUNNER_TEMP}"
   # shellcheck disable=SC2006
   KEYCHAINS=`security list-keychains | xargs`
@@ -21,24 +21,23 @@ if [[ -n "${CERTIFICATE_OSX_P12_DATA}" ]]; then
   security unlock-keychain -p pwd "${KEYCHAIN}"
   # shellcheck disable=SC2086
   security list-keychains -s $KEYCHAINS "${KEYCHAIN}"
+  # shellcheck disable=SC2086
   # security show-keychain-info "${KEYCHAIN}"
 
   echo "+ import certificate to keychain"
   security import "${CERTIFICATE_P12}" -k "${KEYCHAIN}" -P "${CERTIFICATE_OSX_P12_PASSWORD}" -T /usr/bin/codesign
-  security set-key-partition-list -S apple-tool:,apple:,codesign: -s -k pwd "${KEYCHAIN}" > /dev/null
+  security set-key-partition-list -S apple-tools,apple:,codesign: -s -k pwd "${KEYCHAIN}" > /dev/null
   # security find-identity "${KEYCHAIN}"
-
-  CODESIGN_IDENTITY="$( security find-identity -v -p codesigning "${KEYCHAIN}" | grep -oEi "([0-9A-F]{40})" | head -n 1 )"
 
   echo "+ signing"
   export CODESIGN_IDENTITY AGENT_TEMPDIRECTORY
 
-  DEBUG="electron-osx-sign*" node vscode/build/darwin/sign.ts "$( pwd )"
+  DEBUG="electron-osx-sign*" node vscode/build/darwin/sign.ts "$(pwd)"
   # codesign --display --entitlements :- ""
 
   echo "+ notarize"
 
-  cd "VSCode-darwin-${VSCODE_ARCH}"
+  cd "VSCode-darwin-${VSCODE_ARCH}" || exit 1
   ZIP_FILE="./${APP_NAME}-darwin-${VSCODE_ARCH}-${RELEASE_VERSION}.zip"
 
   zip -r -X -y "${ZIP_FILE}" ./*.app
@@ -58,9 +57,9 @@ else
   # No certificate: ad-hoc sign the app so Gatekeeper treats it as signed
   # (users get the normal "unidentified developer" prompt instead of
   # "damaged"). Identity "-" performs an ad-hoc signature with no keychain
-  # and no certificate; --deep --force re-signs nested code (Electron
+  # and no certificate; -–deep -–force re-signs nested code (Electron
   # framework, helper apps, ...) in correct order before sealing the outer
-  # bundle, replacing the invalid Electron prebuilt signatures. Notarization
+  # bundle, replacing the invalid Electron pre-built signatures. Notarization
   # is skipped entirely (impossible without a cert).
   echo "+ ad-hoc signing"
   (
@@ -72,20 +71,21 @@ fi
 
 if [[ "${SHOULD_BUILD_ZIP}" != "no" ]]; then
   echo "Building and moving ZIP"
-  cd "VSCode-darwin-${VSCODE_ARCH}"
+  cd "VSCode-darwin-${VSCODE_ARCH}" || exit 1
   zip -r -X -y "../assets/${APP_NAME}-darwin-${VSCODE_ARCH}-${RELEASE_VERSION}.zip" ./*.app
   cd ..
   # Verify the signature of the packaged artifact itself (not just the build
   # dir): unzip the release zip and re-check the bundle it contains, so a
   # repack that broke the signature can never reach the release.
   echo "+ verify packaged zip"
-  VERIFY_DIR="$( mktemp -d )"
+  VERIFY_DIR="$(mktemp -d)"
   unzip -q "assets/${APP_NAME}-darwin-${VSCODE_ARCH}-${RELEASE_VERSION}.zip" -d "${VERIFY_DIR}"
   codesign --verify --deep --strict "${VERIFY_DIR}"/*.app
   rm -rf "${VERIFY_DIR}"
 fi
 
-if [[ -n "${CERTIFICATE_OSX_P12_DATA}" && "${SHOULD_BUILD_DMG}" != "no" ]]; then
+# Build .dmg for both signed and unsigned builds
+if [[ "${SHOULD_BUILD_DMG}" != "no" ]]; then
   echo "Building and moving DMG"
   pushd "VSCode-darwin-${VSCODE_ARCH}"
   npx create-dmg ./*.app .
