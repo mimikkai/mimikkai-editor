@@ -59,7 +59,9 @@ generateJson() {
   JSON_DATA="{}"
 
   # generate parts
-  url="${URL_BASE}/${ASSET_NAME}"
+  # GitHub stores asset names with dots instead of spaces; the download URL
+  # must match the dotted asset name.
+  url="${URL_BASE}/$( echo "${ASSET_NAME}" | sed 's/ /./g' )"
   name="${RELEASE_VERSION}"
   version="${BUILD_SOURCEVERSION}"
   productVersion="$( transformVersion "${RELEASE_VERSION}" )"
