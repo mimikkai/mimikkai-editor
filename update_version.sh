@@ -65,9 +65,11 @@ generateJson() {
   productVersion="$( transformVersion "${RELEASE_VERSION}" )"
   timestamp=$( node -e 'console.log(Date.now())' )
 
+  # GitHub replaces spaces in asset names with dots on upload; match the dotted name.
+  ASSET_DOWNLOAD_NAME="$( echo "${ASSET_NAME}" | sed 's/ /./g' )"
   if [[ ! -f "assets/${ASSET_NAME}" ]]; then
-    echo "Downloading asset '${ASSET_NAME}'"
-    gh release download --repo "${ASSETS_REPOSITORY}" "${RELEASE_VERSION}" --dir "assets" --pattern "${ASSET_NAME}*"
+    echo "Downloading asset '${ASSET_DOWNLOAD_NAME}'"
+    gh release download --repo "${ASSETS_REPOSITORY}" "${RELEASE_VERSION}" --dir "assets" --pattern "${ASSET_DOWNLOAD_NAME}*"
   fi
 
   sha1hash=$( awk '{ print $1 }' "assets/${ASSET_NAME}.sha1" )
