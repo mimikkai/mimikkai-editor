@@ -65,15 +65,16 @@ generateJson() {
   productVersion="$( transformVersion "${RELEASE_VERSION}" )"
   timestamp=$( node -e 'console.log(Date.now())' )
 
-  # GitHub replaces spaces in asset names with dots on upload; match the dotted name.
-  ASSET_DOWNLOAD_NAME="$( echo "${ASSET_NAME}" | sed 's/ /./g' )"
-  if [[ ! -f "assets/${ASSET_NAME}" ]]; then
-    echo "Downloading asset '${ASSET_DOWNLOAD_NAME}'"
-    gh release download --repo "${ASSETS_REPOSITORY}" "${RELEASE_VERSION}" --dir "assets" --pattern "${ASSET_DOWNLOAD_NAME}*"
+  # GitHub replaces spaces in asset names with dots on upload; the release
+  # stores dotted names, so download and hash the dotted variant.
+  ASSET_FILE_NAME="$( echo "${ASSET_NAME}" | sed 's/ /./g' )"
+  if [[ ! -f "assets/${ASSET_FILE_NAME}" ]]; then
+    echo "Downloading asset '${ASSET_FILE_NAME}'"
+    gh release download --repo "${ASSETS_REPOSITORY}" "${RELEASE_VERSION}" --dir "assets" --pattern "${ASSET_FILE_NAME}*"
   fi
 
-  sha1hash=$( awk '{ print $1 }' "assets/${ASSET_NAME}.sha1" )
-  sha256hash=$( awk '{ print $1 }' "assets/${ASSET_NAME}.sha256" )
+  sha1hash=$( awk '{ print $1 }' "assets/${ASSET_FILE_NAME}.sha1" )
+  sha256hash=$( awk '{ print $1 }' "assets/${ASSET_FILE_NAME}.sha256" )
 
   # check that nothing is blank (blank indicates something awry with build)
   for key in url name version productVersion sha1hash timestamp sha256hash; do
