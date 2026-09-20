@@ -107,6 +107,24 @@
   "extensionAllowedBadgeProvidersRegex": [
     "^https:\\/\\/github\\.com\\/[^/]+\\/[^/]+\\/(actions\\/)?workflows\\/.*badge\\.svg"
   ],
+  "builtInExtensions": [
+    {
+      "name": "vscode-language-pack-ru",
+      "version": "1.131.2026090407",
+      "sha256": "dc5715929c1a0eaf611494c7dee290a0db3d70dd072b60f240071a8c5a5f7f4c",
+      "vsix": "build/vsix/MS-CEINTL.vscode-language-pack-ru-1.131.2026090407.vsix",
+      "metadata": {
+        "id": "MS-CEINTL.vscode-language-pack-ru",
+        "publisherId": {
+          "publisherId": "0b0882c3-aee3-4d7c-b5f9-872f9be0a115",
+          "publisherName": "MS-CEINTL",
+          "displayName": "Microsoft",
+          "flags": "verified"
+        },
+        "publisherDisplayName": "MS-CEINTL"
+      }
+    }
+  ],
   "builtInExtensionsEnabledWithAutoUpdates": [],
   "extensionsEnabledWithApiProposalVersion": [
     "GitHub.copilot-chat",

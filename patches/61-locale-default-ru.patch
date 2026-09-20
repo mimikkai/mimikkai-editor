@@ -1,8 +1,16 @@
 diff --git i/src/main.ts w/src/main.ts
-index 085290ba..54150fa6 100644
+index 085290b..2f43482 100644
 --- i/src/main.ts
 +++ w/src/main.ts
-@@ -732,7 +732,13 @@ function getUserDefinedLocale(argvConfig: IArgvConfig): string | undefined {
+@@ -129,6 +129,7 @@ let nlsConfigurationPromise: Promise<INLSConfiguration> | undefined = undefined;
+ const osLocale = processZhLocale((app.getPreferredSystemLanguages()?.[0] ?? 'en').toLowerCase());
+ const userLocale = getUserDefinedLocale(argvConfig);
+ if (userLocale) {
++	seedLanguagePacks(userDataPath);
+ 	nlsConfigurationPromise = resolveNLSConfiguration({
+ 		userLocale,
+ 		osLocale,
+@@ -732,7 +733,57 @@ function getUserDefinedLocale(argvConfig: IArgvConfig): string | undefined {
  		return locale.toLowerCase(); // a directly provided --locale always wins
  	}
  
@@ -14,6 +22,50 @@ index 085290ba..54150fa6 100644
 +	}
 +
 +	return argvConfig.locale.toLowerCase();
++
++/**
++ * MimikkAI: seed <userDataPath>/languagepacks.json from the bundled
++ * resources/app/extensions/vscode-language-pack-ru/languagepacks-seed.json
++ * so that the vendored Russian language pack (shipped as a built-in
++ * extension) is picked up on the very first launch without a restart.
++ * Seed translation paths are relative to the app root (resources/app)
++ * and resolved to absolute paths here. Never overwrites an existing
++ * pack for the same language.
++ */
++function seedLanguagePacks(userDataPath: string): void {
++	try {
++		const target = path.join(userDataPath, 'languagepacks.json');
++		let packs: Record<string, unknown> = {};
++		try {
++			packs = JSON.parse(fs.readFileSync(target, 'utf-8'));
++		} catch { /* missing or corrupt: start fresh */ }
++
++		// import.meta.dirname is resources/app/out; the seed lives inside the
++		// vendored language pack extension.
++		const seedPath = path.join(import.meta.dirname, '../extensions/vscode-language-pack-ru/languagepacks-seed.json');
++		const seed = JSON.parse(fs.readFileSync(seedPath, 'utf-8')) as Record<string, { translations: Record<string, string> }>;
++
++		let changed = false;
++		for (const [languageId, pack] of Object.entries(seed)) {
++			if (packs[languageId]) {
++				continue; // this language is already configured: leave it alone
++			}
++			const translations: Record<string, string> = {};
++			for (const [moduleId, relative] of Object.entries(pack.translations)) {
++				// seed paths are relative to resources/app
++				translations[moduleId] = path.join(import.meta.dirname, '..', relative);
++			}
++			packs[languageId] = { ...pack, translations };
++			changed = true;
++		}
++
++		if (changed) {
++			fs.writeFileSync(target, JSON.stringify(packs, null, '\t'), 'utf-8');
++		}
++	} catch (error) {
++		console.error('Seeding language packs failed.', error);
++	}
++}
  }
  
  //#endregion
