@@ -126,6 +126,9 @@
     }
   ],
   "builtInExtensionsEnabledWithAutoUpdates": [],
+  "trustedExtensionPublishers": [
+    "mimikkai"
+  ],
   "extensionsEnabledWithApiProposalVersion": [
     "GitHub.copilot-chat",
     "ms-vscode.vscode-commander",
