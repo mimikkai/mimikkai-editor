@@ -85,7 +85,8 @@ jobs:
         if: env.SHOULD_BUILD == 'yes'
 
       - name: Install libkrb5-dev
-        run: sudo apt-get update -y && sudo apt-get install -y libkrb5-dev
+        run: sudo rm -f /etc/apt/sources.list.d/ubuntu-toolchain-r-*.list || true
+        sudo apt-get update -y && sudo apt-get install -y libkrb5-dev
         if: env.SHOULD_BUILD == 'yes'
 
       - name: Clone VSCode repo
@@ -375,7 +376,8 @@ jobs:
         if: env.DISABLED != 'yes'
 
       - name: Install libkrb5-dev
-        run: sudo apt-get update -y && sudo apt-get install -y libkrb5-dev
+        run: sudo rm -f /etc/apt/sources.list.d/ubuntu-toolchain-r-*.list || true
+        sudo apt-get update -y && sudo apt-get install -y libkrb5-dev
         if: env.DISABLED != 'yes'
 
       - name: Install GH
@@ -465,7 +467,8 @@ jobs:
         run: ./check_tags.sh
 
       - name: Install libkrb5-dev
-        run: sudo apt-get update -y && sudo apt-get install -y libkrb5-dev
+        run: sudo rm -f /etc/apt/sources.list.d/ubuntu-toolchain-r-*.list || true
+        sudo apt-get update -y && sudo apt-get install -y libkrb5-dev
         if: env.SHOULD_BUILD == 'yes'
 
       - name: Download vscode artifact
