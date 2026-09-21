@@ -1,7 +1,12 @@
 name: Publish - Insider - macOS
 
 on:
-  workflow_dispatch: {}
+  workflow_dispatch:
+    inputs:
+      new_release:
+        description: 'Force a new release version'
+        type: boolean
+        default: false
   repository_dispatch:
     types:
       - publish-insider
@@ -58,6 +63,7 @@ jobs:
       - name: Check existing tags/releases
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          NEW_RELEASE: ${{ github.event.inputs.new_release }}
         run: . check_tags.sh
 
       - name: Build
