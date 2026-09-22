@@ -1,5 +1,5 @@
 diff --git i/src/main.ts w/src/main.ts
-index 085290b..5c8e8e7 100644
+index 085290b..15f9d83 100644
 --- i/src/main.ts
 +++ w/src/main.ts
 @@ -129,6 +129,7 @@ let nlsConfigurationPromise: Promise<INLSConfiguration> | undefined = undefined;
@@ -10,7 +10,7 @@ index 085290b..5c8e8e7 100644
  	nlsConfigurationPromise = resolveNLSConfiguration({
  		userLocale,
  		osLocale,
-@@ -732,7 +733,57 @@ function getUserDefinedLocale(argvConfig: IArgvConfig): string | undefined {
+@@ -732,7 +733,64 @@ function getUserDefinedLocale(argvConfig: IArgvConfig): string | undefined {
  		return locale.toLowerCase(); // a directly provided --locale always wins
  	}
  
@@ -30,8 +30,10 @@ index 085290b..5c8e8e7 100644
 + * so that the vendored Russian language pack (shipped as a built-in
 + * extension) is picked up on the very first launch without a restart.
 + * Seed translation paths are relative to the app root (resources/app)
-+ * and resolved to absolute paths here. Never overwrites an existing
-+ * pack for the same language.
++ * and resolved to absolute paths here. An existing pack entry is
++ * refreshed when its translation files no longer exist (e.g. the app
++ * was reinstalled to a different location), otherwise it is left
++ * untouched so a user-chosen language pack wins.
 + */
 +function seedLanguagePacks(userDataPath: string): void {
 +	try {
@@ -48,8 +50,13 @@ index 085290b..5c8e8e7 100644
 +
 +		let changed = false;
 +		for (const [languageId, pack] of Object.entries(seed)) {
-+			if (packs[languageId]) {
-+				continue; // this language is already configured: leave it alone
++			const existing = packs[languageId] as { translations?: Record<string, string> } | undefined;
++			if (existing?.translations) {
++				// keep the entry only if its core translation file still exists
++				const vscodeTranslations = existing.translations['vscode'];
++				if (typeof vscodeTranslations === 'string' && fs.existsSync(vscodeTranslations)) {
++					continue;
++				}
 +			}
 +			const translations: Record<string, string> = {};
 +			for (const [moduleId, relative] of Object.entries(pack.translations)) {
